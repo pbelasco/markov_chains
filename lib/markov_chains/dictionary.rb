@@ -10,7 +10,10 @@ module MarkovChains
     #   MarkovChains::Dictionary.new(string, 2)
     #
     # @param [String] the text source
-    # @param [int] the order of the dictionary. The order is the "memory" of the dictionary, meaning that an order <n> dictionary will consider <n> words to generate the next one. Order of 1 or 2 are typical. More than 3 and the generated sentences will be the same as the source.
+    # @param [int] the order of the dictionary. The order is the "memory" of the dictionary, 
+    # meaning that an order <n> dictionary will consider <n> words to generate the next one. 
+    # Order of 1 or 2 are typical. More than 3 and the generated sentences will be the same as 
+    # the source.
     #
     def initialize(text, order = 1)
       @order = order
@@ -38,9 +41,11 @@ module MarkovChains
     # @param [Character] sentence terminator
     #
     private def process_sentence(sentence, terminator)
-      # Consider phrases/words/clauses separators when splitting
-      seps = "([,;:])"
+      # Consider phrases/words/clauses seps when splitting
 
+      # Exclude from separators the accented chars for non-plain-english sources
+      seps = '\p{L}+([@,;:])'
+      
       # Split <sentence> into words
       words = sentence.gsub(/[^#{seps}\w'\s]/, "").gsub(/(#{seps})\s+/, '\1').split(/\s+|#{seps}/)
       words << terminator
